@@ -38,11 +38,20 @@ jobs:
     steps:
 
     - uses: actions/checkout@main
-    
+ 
+    - name: Install yay (AUR helper)
+      run: |
+        sudo pacman -S --noconfirm git base-devel
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+ 
     - name: Install dependencies
       id: dep
       run: |
-        pacman -Syu --noconfirm pahole xmlto inetutils bc cpio jq llvm-git llvm-libs-git clang-git lld-git ccache
+        pacman -Syu --noconfirm pahole xmlto inetutils bc cpio jq ccache
+        yay -Syu --noconfirm llvm-git llvm-libs-git clang-git lld-git
 
     - name: Trust this directory
       run: git config --global --add safe.directory '*' # v2.35.3 or later
